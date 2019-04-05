@@ -65,11 +65,11 @@
 									<h3>Sign In</h3>
 									<form id="login" method="post">
 										<div class="form-group user-name-field">
-											<input type="text" class="form-control" name="email" placeholder="Email">
+											<input type="text" class="form-control" name="email" placeholder="Email" required>
 											<div class="field-icon"><i class="ion-person"></i></div>
 										</div>
 										<div class="form-group margin-bottom-30px forgot-password-field">
-											<input type="password" class="form-control" name="password" placeholder="Mobile Number">
+											<input type="text" class="form-control" name="password" placeholder="Mobile Number" required>
 											<div class="field-icon"><i class="ion-locked"></i></div>
 											<!-- <a href="javascript:;" class="forgot-password-click">Forgot?</a> -->
 										</div>
@@ -97,19 +97,19 @@
 									<h3>Sign Up</h3>
 									<form id="signup" method="post">
 										<div class="form-group user-name-field">
-											<input type="text" class="form-control" name="name" placeholder="Name">
+											<input type="text" class="form-control" name="name" placeholder="Name" required>
 											<div class="field-icon"><i class="ion-person"></i></div>
 										</div>
 										<div class="form-group user-name-field">
-											<input type="text" class="form-control" name="email" placeholder="Email">
+											<input type="text" class="form-control" name="email" placeholder="Email" required>
 											<div class="field-icon"><i class="ion-ios-email"></i></div>
 										</div>
 										<div class="form-group">
-											<input type="text" class="form-control" name="phone" placeholder="Mobile Number">
+											<input type="text" class="form-control" name="phone" placeholder="Mobile Number" required>
 											<div class="field-icon"><i class="ion-locked"></i></div>
 										</div>
 										<div class="form-group margin-bottom-30px">
-											<input type="text" class="form-control" name="college" placeholder="College">
+											<input type="text" class="form-control" name="college" placeholder="College" required>
 											<div class="field-icon"><i class="ion-locked"></i></div>
 										</div>
 										<div class="d-none signup-failed alert alert-danger text-center" role="alert">
@@ -130,7 +130,7 @@
 						</div>
 						<!-- signup slide end -->
 						<!-- forgot password slide start -->
-						<div class="forgot-password-slide slide">
+						<!-- <div class="forgot-password-slide slide">
 							<div class="d-flex height-100-percentage">
 								<div class="align-self-center width-100-percentage">
 									<h3>Forgot Password</h3>
@@ -149,7 +149,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
 						<!-- forgot password slide end -->
 					</div>
 				</div>
@@ -182,6 +182,10 @@
 		          else {
 		            $('.login-failed').removeClass('d-none');
 		          }
+		       },
+					 error: function()
+		       {
+	            window.location = '<?php echo base_url(); ?>problem';
 		       }
 		   });
 		 });

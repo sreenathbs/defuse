@@ -9,6 +9,12 @@ class Problem extends CI_Controller {
     $this->load->helper('url');
 		$this->load->model('qa');
 		// $this->load->database();
+
+		if(is_null($this->session->userdata('email')) && $this->router->fetch_method() != 'timer') {
+			echo 0;
+			redirect('login', 'location');
+			return;
+		}
 	}
 
 	public function index() {
@@ -38,15 +44,27 @@ class Problem extends CI_Controller {
 	}
 
   public function get_next_qn() {
+		if ($this->session->userdata('level')+1 > TOTAL_LEVELS) {
+			$qn = new stdClass();
+			$qn->status = 0;
+			// $qn->timer = ;
+      echo json_encode($qn);
+      return True;
+		}
     if (!is_null($this->session->userdata('question'))) {
       $qn = new stdClass();
+      $qn->current_level = $this->session->userdata('level');
       $qn->level = $this->session->userdata('level')+1;
       $qn->title = $this->session->userdata('title');
       $qn->question = $this->session->userdata('question');
+			$qn->status = 1;
       echo json_encode($qn);
       return True;
     }
     $result = $this->qa->get_next_question($this->session->userdata('level')+1);
+    $result['current_level'] = $this->session->userdata('level');
+    $result['level'] = $this->session->userdata('level')+1;
+		$result['status'] = 1;
     echo json_encode($result);
     return True;
 	}
@@ -80,49 +98,12 @@ class Problem extends CI_Controller {
     }
 	}
 
-	public function signup() {
-		if (!isset($_POST['email'])) {
-			$this->load->view('user/login');
-			return;
+	public function defused() {
+		if ($this->session->userdata('level') == TOTAL_LEVELS) {
+			echo "Bomb Defused!";
+			return True;
 		}
-
-		$data['name'] = $_POST['name'];
-		$data['email'] =  $_POST['email'];
-		$data['phone'] =  $_POST['phone'];
-		$data['college'] =  $_POST['college'];
-		$data['status'] =  'ACTIVE';
-		$data['role'] =  'REGULAR';
-		$data['regd_on'] = date("Y-m-d H:i:s");
-		$data['level'] = 0;
-
-		$result = $this->authentication->signup($data);
-
-		if ($result['signup_status'] == 'ALREADY REGD') {
-			echo "Already registered. Please login";
-			return;
-		}
-
-		$this->session->set_userdata($result);
-		redirect('problem', 'location');
+		redirect('problem/index', 'location');
 	}
 
-	public function login() {
-		if (!isset($_POST['email'])) {
-			$this->load->view('user/login');
-			return;
-		}
-
-		$data['email'] =  $_POST['email'];
-		$data['phone'] =  $_POST['password'];
-
-		$result = $this->authentication->login($data);
-
-		if ($result['login_status'] == 'LOGIN FAILED') {
-			echo "Login Failed. Try again.";
-			return;
-		}
-
-		$this->session->set_userdata($result);
-		redirect('problem', 'location');
-	}
 }
